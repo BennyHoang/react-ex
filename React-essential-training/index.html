@@ -14,13 +14,28 @@
     <div id="react-container"><div>
     <script type="text/babel">
     var Note = React.createClass({
+        getInitialState() {
+            return{editing: false}
+        },
         edit(){
-            alert("Editing note")
+            this.setState({editing:true})
+        },
+        save(){
+            this.setState({editing:false})
         },
         remove(){
             alert("Removing note")
         },
-        render(){
+        renderForm(){
+            return (
+                <div className="note">
+                    <textarea></textarea>
+                    <button onClick={this.save}>SAVE</button>
+                    
+                </div>
+            )
+        },
+        renderDisplay(){
             return (
                 <div className="note">
                     <p>{this.props.children}</p>
@@ -30,6 +45,10 @@
                     </span>
                 </div>
             )
+        },
+        render(){
+            return (this.state.editing) ? this.renderForm()
+                                 : this.renderDisplay()
         }
     })
 
