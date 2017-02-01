@@ -9,9 +9,12 @@
 <body>
     <div id="react-container"><div>
     <script>
-        ReactDOM.render(React.createElement('div', null, 'Hello World'),
-        document.getElementById('react-container')
-        )
+        ReactDOM.render(<ul>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>,
+        document.getElementById('react-container'))
     </script>
 </body>
 </html>
