@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <script src="https://fb.me/react-15.2.1.js"></script>
     <script src="https://fb.me/react-dom-15.2.1.js"></script>
@@ -8,27 +7,28 @@
     <meta charset="UTF-8">
     <title>My First React File</title>
 </head>
-
 <body>
-    <div id="react-container">
-        <div>
-            <script type="text/babel">
-        class MyComponent extends React.Component{
-        render(){
-                    return <div>
-                            <h1>Hello World</h1>
-                            <p> This is my first React component ! </p>
-                        </div>
-                }
-        }
-        
+    <div id="react-container"><div>
+    <script type="text/babel">
+        var MyComponent = React.createClass({
+            render(){
+                return <div>
+                        <h1>{this.props.text}</h1>
+                        <p> This is my first React component ! </p>
+                    </div>
+            }
+        })
 
-        ReactDOM.render(<MyComponent />,
+        ReactDOM.render(
+            <div>
+            <MyComponent text="Hello World"/>
+            <MyComponent text="Component"/>
+            <MyComponent text="Reused man"/>
+            </div>,
             document.getElementById('react-container'))
 
 
 
     </script>
 </body>
-
 </html>
