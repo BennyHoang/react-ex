@@ -5,17 +5,38 @@
     <script src="https://fb.me/react-15.2.1.js"></script>
     <script src="https://fb.me/react-dom-15.2.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.js"></script>
+    <script src="https://npmcdn.com/react-draggable"></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>Note board</title>
 </head>
 
 <body>
-    <div id="react-container"><div>
-    <script type="text/babel">
+    <div id="react-container">
+        <div>
+            <script type="text/babel">
     var Note = React.createClass({
         getInitialState() {
             return{editing: false}
+        },
+        componentWillMount(){
+            this.style={
+                right: this.randomBetween(0, window.innerWidth - 150, 'px'),
+                top: this.randomBetween(0, window.innerHeight - 150, 'px')
+            }
+        },
+        componentDidUpdate(){
+            if(this.state.editing){
+                this.refs.newText.focus()
+                this.refs.newText.select()
+            }
+        },
+        shouldComponentUpdate(nextProps, nextState){
+            return this.props.children !== nextProps.children || this.state !== nextState
+        },
+        randomBetween(x, y , s){
+            return (x + Math.ceil(Math.random()* (y-x))) + s
         },
         edit(){
             this.setState({editing:true})
@@ -29,8 +50,10 @@
         },
         renderForm(){
             return (
-                <div className="note">
-                    <textarea ref="newText"></textarea>
+                <div className="note"
+                     style={this.style}>
+                    <textarea ref="newText"
+                              defaultValue={this.props.children}></textarea>
                     <button onClick={this.save}>SAVE</button>
                     
                 </div>
@@ -38,7 +61,8 @@
         },
         renderDisplay(){
             return (
-                <div className="note">
+                <div className="note"
+                     style={this.style}>
                     <p>{this.props.children}</p>
                     <span>
                         <button onClick={this.edit}>Edit</button>
@@ -48,8 +72,8 @@
             )
         },
         render(){
-            return (this.state.editing) ? this.renderForm()
-                                 : this.renderDisplay()
+            return (<ReactDraggable>{(this.state.editing) ? this.renderForm()
+                                 : this.renderDisplay()}</ReactDraggable>)
         }
     })
 
@@ -66,13 +90,36 @@
         },
         getInitialState(){
             return {
-                notes: [
-                    {id: 0, note: 'Call Bob'},
-                    {id: 1, note: 'Email Sarah'},
-                    {id: 2, note: 'Eat lunch'},
-                    {id: 3, note: 'finish proposal'}
-                ]
+                notes: []
             }
+        },
+        componentWillMount(){
+            if(this.props.count){
+                var url = `http://baconipsum.com/api/?type=all-meat&sentences=${this.props.count}`
+                fetch(url)
+                     .then(results => results.json())
+                     .then(array => array[0])
+                     .then(text => text.split('. '))
+                     .then(array => array.forEach(
+                         sentence => this.add(sentence)))
+                     .catch(function(err){
+                         console.log("didn't connect to the API", err)
+                     })
+            }
+        },
+        nextId(){
+            this.uniqueId = this.uniqueId || 0
+            return this.uniqueId++
+        },
+        add(text){
+            var notes = [
+                ...this.state.notes,
+                {
+                    id: this.nextId(),
+                    note: text
+                }
+            ]
+            this.setState({notes});
         },
         update(newText, id){
             var notes = this.state.notes.map(
@@ -101,6 +148,7 @@
             return (
                 <div className='board'>
                     {this.state.notes.map(this.eachNote)}
+                    <button onClick={() => this.add()}>+</button>
                 </div>
             )
         }
