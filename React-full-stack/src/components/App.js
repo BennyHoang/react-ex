@@ -3,10 +3,13 @@ import Header from './Header';
 import ContestPreview from './ContestPreview';
 class App extends React.Component {
     state = {
-        pageHeader: "Naming Contest"
+        pageHeader: "Naming Contest",
+        contests: []
     };
     componentDidMount(){
-        
+        this.setState({
+            contests: data.contests
+        });
     }
     componentWillUnmount(){
 
@@ -16,8 +19,8 @@ class App extends React.Component {
             <div className="App">
                 <Header message={ this.state.pageHeader} />
                 <div>
-                    {this.props.contests.map(contest =>
-                        <ContestPreview  {...contest} />                    
+                    {this.state.contests.map(contest =>
+                        <ContestPreview key={contest.id}  {...contest} />                    
                     )}
                 </div>
             </div>
