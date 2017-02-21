@@ -17,15 +17,23 @@ server.use(sassMiddleware({
 
 server.use('/api', apiRouter);
 
-server.get('/',(req, res) => {
-    res.render('index', {
-        content: 'Hello Express and EJS'
-    });
+import serverRender from './serverRender';
+
+server.get('/', (req, res) => {
+    serverRender()
+        .then(content => {
+            res.render('index', {
+                content
+            });
+        })
+        .catch(console.error);
+
+
 
 });
 
 server.use(express.static('public'));
 
-server.listen(config.port, () => {
+server.listen(config.port, config.host, () => {
     console.info("Express listening to port ", config.port);
 });
