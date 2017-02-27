@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 class ContestPreview extends Component {
   handleClick = () => {
     this.props.onClick(this.props.id);
-    alert("clicked");
   };
   render() {
     return (
