@@ -51,4 +51,8 @@ router.get('/names/:nameIds', (req, res) => {
     });
 });
 
+router.post('/names', (req, res) => {
+  console.log(req.body);
+});
+
 export default router;
