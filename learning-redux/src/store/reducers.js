@@ -5,7 +5,7 @@ export const goal = (state=10, action) =>
         parseInt(action.payload) :
         state
 
-export const skiDay = (state=null, action) => 
+export const skiDay = (state = null, action) => 
     (action.type === C.ADD_DAY) ?
         action.payload :
         state
@@ -24,5 +24,26 @@ export const errors = (state=[], action) => {
 
         default:
             return state
+    }
+}
+
+export const allSkiDays = (state = [], action) => {
+    switch(action.type){
+        case C.ADD_DAY :
+            const hasDay = state.some(skiDay => skiDay.date === action.payload.date);
+            
+            return (hasDay) ?
+            state:
+            [
+                ...state,
+                skiDay(null, action)
+            ]
+        case C.REMOVE_DAY :
+
+            return state.filter(skiDay=> skiDay.date !== action.payload)
+        
+        default:
+            
+            returnstate
     }
 }
